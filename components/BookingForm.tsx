@@ -13,6 +13,11 @@ interface BookingFormProps {
 
 const CALENDAR_URL = 'https://link.harleystreetmedics.clinic/widget/bookings/lead-skin-consultant-n';
 
+// Helper to convert treatment name to slug format (e.g., "Warts Removal" -> "warts-removal")
+const getTreatmentSlug = (treatment: string): string => {
+  return treatment.toLowerCase().replace(/\s+/g, '-');
+};
+
 const BookingForm: React.FC<BookingFormProps> = ({
   initialTreatment = 'Warts Removal',
   locationId = 'london',
@@ -25,6 +30,9 @@ const BookingForm: React.FC<BookingFormProps> = ({
     phone: '',
     treatment: initialTreatment
   });
+
+  // Generate dynamic form class name based on treatment and location
+  const formClassName = `space-y-4 space-y-4-${getTreatmentSlug(initialTreatment)}-${locationId}`;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [internalShowPopup, setInternalShowPopup] = useState(false);
@@ -215,7 +223,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className={formClassName}>
           <div>
             <label className="block text-xs font-semibold text-neutral-500 uppercase mb-1 ml-1">Name</label>
             <input
