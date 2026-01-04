@@ -92,11 +92,14 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
         // Push event to GTM dataLayer
         window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
+        const gtmEventData = {
           event: 'form_submit',
           formLocation: locationId,
-          formTreatment: formData.treatment
-        });
+          formTreatment: formData.treatment,
+          formClass: formClassName
+        };
+        window.dataLayer.push(gtmEventData);
+        console.log('GTM Event Pushed:', gtmEventData);
 
         setShowCalendarPopup(true);
         setFormData({ name: '', email: '', phone: '', treatment: initialTreatment });
