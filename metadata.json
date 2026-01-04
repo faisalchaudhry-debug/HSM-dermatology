@@ -1,0 +1,8 @@
+{
+  "name": "Harley Street Medics - Wart Removal London",
+  "description": "A luxury medical landing page for professional wart removal services in London, featuring advanced laser treatments and a premium aesthetic.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
