@@ -364,7 +364,7 @@ const ClinicPage: React.FC<ClinicPageProps> = ({ locationId }) => {
 
     const getTreatmentForBooking = () => {
         switch (activePage) {
-            case 'ganglion': return 'Cyst Removal';
+            case 'ganglion': return locationId === 'london' ? 'Ganglion Cyst Removal' : 'Cyst Removal';
             case 'mole': return 'Mole Removal';
             case 'lipoma': return 'Lipoma Removal';
             case 'cyst': return 'Cyst Removal';

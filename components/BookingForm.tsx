@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Calendar, CheckCircle } from 'lucide-react';
 import { locations } from '../src/data/locations';
@@ -37,6 +37,9 @@ const BookingForm: React.FC<BookingFormProps> = ({
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [internalShowPopup, setInternalShowPopup] = useState(false);
 
+  // Guard to prevent duplicate submissions
+  const isSubmittingRef = useRef(false);
+
   const showCalendarPopup = isOpen !== undefined ? isOpen : internalShowPopup;
 
   const setShowCalendarPopup = (open: boolean) => {
@@ -58,6 +61,14 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Guard against duplicate submissions
+    if (isSubmittingRef.current) {
+      console.log('Duplicate submission blocked');
+      return;
+    }
+    isSubmittingRef.current = true;
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
@@ -111,6 +122,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
+      isSubmittingRef.current = false;
     }
   };
 
@@ -278,6 +290,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               <option value="Mole Removal">Mole Removal</option>
               <option value="Cyst Removal">Cyst Removal</option>
               <option value="Lipoma Removal">Lipoma Removal</option>
+              <option value="Ganglion Cyst Removal">Ganglion Cyst Removal</option>
               <option value="Genital Warts Removal">Genital Warts Removal</option>
             </select>
           </div>

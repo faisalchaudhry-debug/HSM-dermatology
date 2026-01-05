@@ -96,7 +96,7 @@ export const locations: Record<'london' | 'glasgow', LocationData> = {
         'Mole Removal': 'https://services.leadconnectorhq.com/hooks/Q7V3TZrLpPnz6GYN6Qyt/webhook-trigger/hSY3FKpJzscKFlQD9S7u',
         'Cyst Removal': 'https://services.leadconnectorhq.com/hooks/Q7V3TZrLpPnz6GYN6Qyt/webhook-trigger/NTlpN1cCkg5OkWEnfuUr',
         'Lipoma Removal': 'https://services.leadconnectorhq.com/hooks/Q7V3TZrLpPnz6GYN6Qyt/webhook-trigger/TzbLHg71GNgTqEHBcXUV',
-        "London's Ganglion Cyst Specialists": 'https://services.leadconnectorhq.com/hooks/Q7V3TZrLpPnz6GYN6Qyt/webhook-trigger/XW3C7S0D1u15VVdbfWXH',
+        'Ganglion Cyst Removal': 'https://services.leadconnectorhq.com/hooks/Q7V3TZrLpPnz6GYN6Qyt/webhook-trigger/XW3C7S0D1u15VVdbfWXH',
       },
       agent: {
         'general': 'https://services.leadconnectorhq.com/hooks/Q7V3TZrLpPnz6GYN6Qyt/webhook-trigger/s9XBN0fmOz7Kt9GIG351',
@@ -107,6 +107,7 @@ export const locations: Record<'london' | 'glasgow', LocationData> = {
         'mole': 'https://services.leadconnectorhq.com/hooks/Q7V3TZrLpPnz6GYN6Qyt/webhook-trigger/Lq2G7TEQf3i75n6aN7gy',
         'cyst': 'https://services.leadconnectorhq.com/hooks/Q7V3TZrLpPnz6GYN6Qyt/webhook-trigger/YNzqONrdDUjoe1ICerah',
         'lipoma': 'https://services.leadconnectorhq.com/hooks/Q7V3TZrLpPnz6GYN6Qyt/webhook-trigger/9ZEgACXOAeLL3lLYgTLQ',
+        'ganglion': 'https://services.leadconnectorhq.com/hooks/Q7V3TZrLpPnz6GYN6Qyt/webhook-trigger/GlBsKPoMIk0SnLWfkGgR',
       }
     }
   },
