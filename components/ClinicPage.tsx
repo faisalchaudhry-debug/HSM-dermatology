@@ -135,7 +135,6 @@ const ClinicPage: React.FC<ClinicPageProps> = ({ locationId }) => {
 
     const navLinks = [
         { name: 'Treatments', href: '#treatments' },
-        { name: 'Real Results', href: '#gallery' },
         { name: 'Details', href: '#details' },
         { name: 'Expertise', href: '#team' },
         { name: 'FAQ', href: '#faq' },
@@ -390,6 +389,17 @@ const ClinicPage: React.FC<ClinicPageProps> = ({ locationId }) => {
                 onOpenCalendar={() => setIsBookingPopupOpen(true)}
             />
 
+            {/* Floating Calendar Button */}
+            <a
+                href="https://link.harleystreetmedics.clinic/widget/bookings/lead-skin-consultant-n"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="fixed bottom-8 left-4 md:bottom-8 md:left-8 z-[99999] bg-amber-500 gold-gradient text-black font-bold w-16 h-16 md:w-auto md:h-auto md:p-4 rounded-full shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:scale-110 transition-all duration-300 flex items-center justify-center gap-2 border border-amber-400/50 group"
+            >
+                <Clock size={24} className="group-hover:rotate-12 transition-transform" />
+                <span className="hidden md:inline uppercase tracking-widest text-xs">Book Now</span>
+            </a>
+
             <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden">
 
                 <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled ? 'bg-black/95 backdrop-blur-md py-2 border-b border-amber-500/20' : 'bg-transparent py-4'}`}>
@@ -401,6 +411,9 @@ const ClinicPage: React.FC<ClinicPageProps> = ({ locationId }) => {
                             {navLinks.map((link) => (
                                 <a key={link.name} href={link.href} className="hover:text-amber-500 transition-colors">{link.name}</a>
                             ))}
+                            <a href="#gallery" className="bg-amber-500/10 border border-amber-500/40 text-amber-500 px-6 py-3 rounded hover:bg-amber-500 hover:text-black transition-all">
+                                Real Results
+                            </a>
                             <button onClick={scrollToBooking} className="bg-amber-500/10 border border-amber-500/40 text-amber-500 px-6 py-3 rounded hover:bg-amber-500 hover:text-black transition-all">
                                 Book Free Online Consultation
                             </button>
@@ -414,6 +427,9 @@ const ClinicPage: React.FC<ClinicPageProps> = ({ locationId }) => {
                             {navLinks.map((link) => (
                                 <a key={link.name} href={link.href} onClick={() => setIsMenuOpen(false)} className="text-neutral-400 font-bold uppercase text-xs tracking-widest">{link.name}</a>
                             ))}
+                            <button onClick={() => { setIsMenuOpen(false); document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' }); }} className="gold-gradient text-black font-bold py-4 rounded uppercase text-xs tracking-widest">
+                                Real Results
+                            </button>
                             <button onClick={() => { setIsMenuOpen(false); scrollToBooking(); }} className="gold-gradient text-black font-bold py-4 rounded uppercase text-xs tracking-widest">
                                 Book Free Online Consultation
                             </button>
