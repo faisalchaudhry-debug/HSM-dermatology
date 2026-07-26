@@ -114,10 +114,10 @@ export const locations: Record<'london' | 'glasgow', LocationData> = {
     id: 'glasgow',
     city: 'Glasgow',
     clinicName: 'Harley Street Medics Glasgow',
-    address: 'Glasgow Day Surgery Centre, 154 Clyde Street, G1 4EX',
+    address: '5th Floor, Ingram House, 227 Ingram St, Glasgow G1 1DA, United Kingdom',
     phone: '0141 488 8985',
     whatsapp: '0141 488 8985',
-    mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2239.4366323065437!2d-4.2521816!3d55.8550905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4888473b07208639%3A0x1ad5dc1b4f68112e!2sHarley%20Street%20Medics!5e0!3m2!1sen!2s!4v1767254106397!5m2!1sen!2s',
+    mapEmbedUrl: 'https://www.google.com/maps?q=Ingram%20House%2C%20227%20Ingram%20St%2C%20Glasgow%20G1%201DA%2C%20United%20Kingdom&output=embed',
     heroTitle: 'Wart Removal Glasgow',
     heroSubtitle: "Worried about a mole? We offer Glasgow's most advanced mole removal and checking services.",
     doctors: [

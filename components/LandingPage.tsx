@@ -1,10 +1,20 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, MapPin } from 'lucide-react';
 
 const LandingPage: React.FC = () => {
     const logoUrl = "https://github.com/faisaliqbalfaisal723-hub/harleystreemedics-image-source/blob/main/HSM%20LOGO.png?raw=true";
+
+    // ClinicPage rewrites the head tags, so reset them when returning here.
+    useEffect(() => {
+        document.title = 'Harley Street Medics | Wart & Skin Lesion Removal Clinics';
+        document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute(
+            'content',
+            'Private wart, verruca, mole, cyst and skin tag removal at Harley Street Medics. Choose your clinic: London (Harley Street) or Glasgow (Ingram Street).'
+        );
+        document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', window.location.origin + '/');
+    }, []);
 
     return (
         <div className="min-h-screen bg-black text-white font-sans flex flex-col items-center justify-center relative overflow-hidden">
@@ -56,7 +66,7 @@ const LandingPage: React.FC = () => {
                             </div>
 
                             <h2 className="text-3xl font-serif text-white mb-2 group-hover:text-amber-500 transition-colors">Glasgow</h2>
-                            <p className="text-neutral-500 text-sm uppercase tracking-widest font-bold mb-6">Clyde Street</p>
+                            <p className="text-neutral-500 text-sm uppercase tracking-widest font-bold mb-6">Ingram Street</p>
 
                             <span className="inline-flex items-center text-amber-500 text-xs font-bold uppercase tracking-widest hover:underline decoration-amber-500/50 underline-offset-4">
                                 Enter Clinic <ChevronRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />

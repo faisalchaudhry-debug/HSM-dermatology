@@ -37,14 +37,16 @@ import FinancingSection from './FinancingSection';
 import ReviewSection from './ReviewSection';
 import MoleSimulation from './MoleSimulation';
 import {
-    GENERAL_FAQS,
-    GENITAL_FAQS,
-    VERRUCA_FAQS,
-    SKIN_TAG_FAQS,
-    ANAL_SKIN_TAG_FAQS,
-    CYST_FAQS,
-    LIPOMA_FAQS,
-    MOLE_FAQS
+    getGeneralFaqs,
+    getGenitalFaqs,
+    getVerrucaFaqs,
+    getSkinTagFaqs,
+    getAnalSkinTagFaqs,
+    getCystFaqs,
+    getGanglionFaqs,
+    getLipomaFaqs,
+    getMoleFaqs,
+    getSkinTagReviews
 } from '../constants';
 
 import { locations } from '../src/data/locations';
@@ -54,6 +56,50 @@ type PageView = 'general' | 'verruca' | 'genital' | 'skintag' | 'analskintag' | 
 interface ClinicPageProps {
     locationId: 'london' | 'glasgow';
 }
+
+const SUB_PATHS: Record<PageView, string> = {
+    general: '',
+    verruca: '/verruca-removal',
+    genital: '/genital-warts',
+    skintag: '/skin-tag-removal',
+    analskintag: '/anal-skin-tags',
+    cyst: '/cyst-removal',
+    lipoma: '/lipoma-removal',
+    mole: '/mole-removal',
+    ganglion: '/ganglion-cyst',
+};
+
+// This is a client-rendered SPA served from a single index.html, so the head
+// tags have to be written at runtime or every route inherits the same title.
+const setMetaDescription = (content: string) => {
+    let el = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (!el) {
+        el = document.createElement('meta');
+        el.name = 'description';
+        document.head.appendChild(el);
+    }
+    el.content = content;
+};
+
+const setCanonical = (href: string) => {
+    let el = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!el) {
+        el = document.createElement('link');
+        el.rel = 'canonical';
+        document.head.appendChild(el);
+    }
+    el.href = href;
+};
+
+const setOgTag = (property: string, content: string) => {
+    let el = document.querySelector<HTMLMetaElement>(`meta[property="${property}"]`);
+    if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute('property', property);
+        document.head.appendChild(el);
+    }
+    el.content = content;
+};
 
 const ClinicPage: React.FC<ClinicPageProps> = ({ locationId }) => {
     // Determine activePage from URL initially or default to 'general'
@@ -110,18 +156,7 @@ const ClinicPage: React.FC<ClinicPageProps> = ({ locationId }) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
         // Update URL when state changes
-        let subPath = '';
-        if (activePage === 'verruca') subPath = '/verruca-removal';
-        if (activePage === 'genital') subPath = '/genital-warts';
-        if (activePage === 'skintag') subPath = '/skin-tag-removal';
-        if (activePage === 'analskintag') subPath = '/anal-skin-tags';
-        if (activePage === 'cyst') subPath = '/cyst-removal';
-        if (activePage === 'lipoma') subPath = '/lipoma-removal';
-        if (activePage === 'mole') subPath = '/mole-removal';
-        if (activePage === 'ganglion') subPath = '/ganglion-cyst';
-
-        // Construct full path
-        const targetPath = `/${locationId}${subPath}`;
+        const targetPath = `/${locationId}${SUB_PATHS[activePage]}`;
 
         // Only navigate if the URL is different to prevent loops
         if (location.pathname !== targetPath) {
@@ -141,16 +176,85 @@ const ClinicPage: React.FC<ClinicPageProps> = ({ locationId }) => {
         { name: 'FAQ', href: '#faq' },
     ];
 
+    // FAQ copy is generated from the active clinic so every answer names the
+    // correct city and lead surgeon.
     const getFaqs = () => {
-        if (activePage === 'mole') return MOLE_FAQS;
-        if (activePage === 'lipoma') return LIPOMA_FAQS;
-        if (activePage === 'cyst') return CYST_FAQS;
-        if (activePage === 'analskintag') return ANAL_SKIN_TAG_FAQS;
-        if (activePage === 'genital') return GENITAL_FAQS;
-        if (activePage === 'verruca') return VERRUCA_FAQS;
-        if (activePage === 'skintag') return SKIN_TAG_FAQS;
-        return GENERAL_FAQS;
+        const city = locationData.city;
+        const leadDoctor = locationData.doctors[0]?.name ?? 'our senior surgeons';
+        if (activePage === 'mole') return getMoleFaqs(city);
+        if (activePage === 'lipoma') return getLipomaFaqs(city);
+        if (activePage === 'ganglion') return getGanglionFaqs(city, leadDoctor);
+        if (activePage === 'cyst') return getCystFaqs(city, leadDoctor);
+        if (activePage === 'analskintag') return getAnalSkinTagFaqs(city);
+        if (activePage === 'genital') return getGenitalFaqs(city);
+        if (activePage === 'verruca') return getVerrucaFaqs(city);
+        if (activePage === 'skintag') return getSkinTagFaqs(city);
+        return getGeneralFaqs(city);
     };
+
+    const getSeoMeta = (): { title: string; description: string } => {
+        const city = locationData.city;
+        switch (activePage) {
+            case 'verruca':
+                return {
+                    title: `Verruca Removal ${city} | Plantar Wart Clinic | Harley Street Medics`,
+                    description: `Advanced non-surgical verruca removal in ${city} from £149. Laser, cryotherapy and excision for painful plantar warts, focused on stopping recurrence.`
+                };
+            case 'genital':
+                return {
+                    title: `Genital Wart Removal ${city} | Private & Discreet | Harley Street Medics`,
+                    description: `Confidential genital wart removal in ${city} from £149. Same-day appointments with CO2 laser and cryotherapy in a private, non-judgmental clinic.`
+                };
+            case 'skintag':
+                return {
+                    title: `Skin Tag Removal ${city} | CO2 Surgical Laser | Harley Street Medics`,
+                    description: `Skin tag removal in ${city} from £199. Fast, painless CO2 surgical laser with no downtime and same-day appointments at our ${city} clinic.`
+                };
+            case 'analskintag':
+                return {
+                    title: `Anal Skin Tag Removal ${city} | Discreet Clinic | Harley Street Medics`,
+                    description: `Safe, discreet anal skin tag removal in ${city}. CO2 surgical laser and clinical excision under local anesthetic in a fully confidential setting.`
+                };
+            case 'mole':
+                return {
+                    title: `Mole Removal ${city} | Melanoma Checks | Harley Street Medics`,
+                    description: `Mole removal and melanoma checks in ${city} from £250. Signature laser, shave and surgical excision with ABCDE assessment by board-certified dermatologists.`
+                };
+            case 'cyst':
+                return {
+                    title: `Cyst Removal ${city} | Sebaceous Cyst Surgery | Harley Street Medics`,
+                    description: `Surgical cyst removal in ${city} from £350. Complete sac excision for sebaceous and epidermoid cysts, with minimal scarring and no NHS waiting list.`
+                };
+            case 'lipoma':
+                return {
+                    title: `Lipoma Removal ${city} | Surgical & Non-Surgical | Harley Street Medics`,
+                    description: `Lipoma removal in ${city} from £495. Surgical excision and fat-dissolving injections by expert plastic surgeons, with minimal downtime.`
+                };
+            case 'ganglion':
+                return {
+                    title: `Ganglion Cyst Removal ${city} | Wrist & Hand | Harley Street Medics`,
+                    description: `Ganglion cyst removal in ${city} from £495. Aspiration and full surgical excision to relieve wrist and hand pain, with same-week appointments.`
+                };
+            default:
+                return {
+                    title: `Wart Removal ${city} | CO2 Laser Clinic | Harley Street Medics`,
+                    description: `Private wart removal in ${city} from £149. CO2 surgical laser that targets the root to stop warts returning, with a free online consultation.`
+                };
+        }
+    };
+
+    useEffect(() => {
+        const { title, description } = getSeoMeta();
+        const url = `${window.location.origin}/${locationId}${SUB_PATHS[activePage]}`;
+
+        document.title = title;
+        setMetaDescription(description);
+        setCanonical(url);
+        setOgTag('og:title', title);
+        setOgTag('og:description', description);
+        setOgTag('og:url', url);
+        setOgTag('og:type', 'website');
+    }, [activePage, locationId, locationData.city]);
 
     const isSkinTagClinic = activePage === 'skintag' || activePage === 'analskintag' || activePage === 'mole';
     const isSurgicalClinic = activePage === 'cyst' || activePage === 'lipoma' || activePage === 'ganglion';
@@ -227,9 +331,9 @@ const ClinicPage: React.FC<ClinicPageProps> = ({ locationId }) => {
                 return {
                     title: "Specialist Cyst Removal",
                     highlight: "Surgical Excellence",
-                    subtitle: "Review by Expert Doctors. Surgical excision of Sebaceous & Epidermoid cysts with minimal scarring and expert closure.",
+                    subtitle: `Review by Expert Doctors. Surgical excision of Sebaceous & Epidermoid cysts in ${locationData.city}, with minimal scarring and expert closure.`,
                     price: "£495",
-                    label: "The UK’s Leading Cyst Removal Clinics",
+                    label: `${locationData.city}'s Leading Cyst Removal Clinic`,
                     icon: <Sparkles className="text-amber-500 w-4 h-4" />,
                     whatIsTitle: "What are Cysts?",
                     whatIsDesc: "Sebaceous and Epidermoid cysts represent the most common types of cysts. These are closed sacs found under the skin filled with cheese-like keratin.",
@@ -730,7 +834,7 @@ const ClinicPage: React.FC<ClinicPageProps> = ({ locationId }) => {
 
                 <div id="gallery"><BeforeAfterSection pageType={activePage === 'ganglion' ? 'cyst' : activePage} /></div>
 
-                <div id="reviews"><ReviewSection pageType={activePage === 'ganglion' ? 'cyst' : activePage} reviews={locationData.reviews} /></div>
+                <div id="reviews"><ReviewSection pageType={activePage === 'ganglion' ? 'cyst' : activePage} reviews={activePage === 'skintag' ? getSkinTagReviews(locationData.city) : locationData.reviews} /></div>
 
                 <div id="financing"><FinancingSection /></div>
 

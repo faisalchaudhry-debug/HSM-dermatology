@@ -1,16 +1,13 @@
 import React from 'react';
 import { Star, CheckCircle } from 'lucide-react';
 import { Testimonial } from '../types';
-import { TESTIMONIALS, SKINTAG_REVIEWS } from '../constants';
 
 interface ReviewSectionProps {
     pageType?: string;
+    reviews: Testimonial[];
 }
 
-const ReviewSection: React.FC<ReviewSectionProps> = ({ pageType }) => {
-    // Select reviews based on page type
-    const reviews = pageType === 'skintag' ? SKINTAG_REVIEWS : [...TESTIMONIALS];
-
+const ReviewSection: React.FC<ReviewSectionProps> = ({ reviews }) => {
     return (
         <div className="py-20 bg-neutral-900 border-t border-neutral-800">
             <div className="container mx-auto px-6">
