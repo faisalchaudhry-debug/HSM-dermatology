@@ -26,7 +26,6 @@ import {
 } from 'lucide-react';
 import BookingForm from './BookingForm';
 import SectionHeader from './SectionHeader';
-import VoiceAgent from './VoiceAgent'; // Using the generic, location-aware agent
 import WartSimulation from './WartSimulation';
 import CystEmergencyGuide from './CystEmergencyGuide';
 import SignatureTreatments from './SignatureTreatments';
@@ -484,15 +483,6 @@ const ClinicPage: React.FC<ClinicPageProps> = ({ locationId }) => {
 
     return (
         <>
-            {/* Consolidated Voice Agent */}
-            <VoiceAgent
-                mode={activePage}
-                location={locationData.city}
-                locationId={locationId}
-                onNavigate={(page) => setActivePage(page)}
-                onOpenCalendar={() => setIsBookingPopupOpen(true)}
-            />
-
             {/* Floating Calendar Button */}
             <a
                 href="https://link.harleystreetmedics.clinic/widget/bookings/lead-skin-consultant-n"
