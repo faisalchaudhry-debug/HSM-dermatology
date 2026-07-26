@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Calendar, CheckCircle } from 'lucide-react';
 import { locations } from '../src/data/locations';
@@ -13,6 +13,11 @@ interface BookingFormProps {
 
 const CALENDAR_URL = 'https://link.harleystreetmedics.clinic/widget/bookings/lead-skin-consultant-n';
 
+// Helper to convert treatment name to slug format (e.g., "Warts Removal" -> "warts-removal")
+const getTreatmentSlug = (treatment: string): string => {
+  return treatment.toLowerCase().replace(/\s+/g, '-');
+};
+
 const BookingForm: React.FC<BookingFormProps> = ({
   initialTreatment = 'Warts Removal',
   locationId = 'london',
@@ -25,9 +30,15 @@ const BookingForm: React.FC<BookingFormProps> = ({
     phone: '',
     treatment: initialTreatment
   });
+
+  // Generate dynamic form class name based on treatment and location
+  const formClassName = `space-y-4 space-y-4-${getTreatmentSlug(initialTreatment)}-${locationId}`;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [internalShowPopup, setInternalShowPopup] = useState(false);
+
+  // Guard to prevent duplicate submissions
+  const isSubmittingRef = useRef(false);
 
   const showCalendarPopup = isOpen !== undefined ? isOpen : internalShowPopup;
 
@@ -50,6 +61,14 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Guard against duplicate submissions
+    if (isSubmittingRef.current) {
+      console.log('Duplicate submission blocked');
+      return;
+    }
+    isSubmittingRef.current = true;
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
@@ -84,11 +103,14 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
         // Push event to GTM dataLayer
         window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
+        const gtmEventData = {
           event: 'form_submit',
           formLocation: locationId,
-          formTreatment: formData.treatment
-        });
+          formTreatment: formData.treatment,
+          formClass: formClassName
+        };
+        window.dataLayer.push(gtmEventData);
+        console.log('GTM Event Pushed:', gtmEventData);
 
         setShowCalendarPopup(true);
         setFormData({ name: '', email: '', phone: '', treatment: initialTreatment });
@@ -100,6 +122,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
+      isSubmittingRef.current = false;
     }
   };
 
@@ -215,7 +238,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className={formClassName}>
           <div>
             <label className="block text-xs font-semibold text-neutral-500 uppercase mb-1 ml-1">Name</label>
             <input
@@ -267,6 +290,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               <option value="Mole Removal">Mole Removal</option>
               <option value="Cyst Removal">Cyst Removal</option>
               <option value="Lipoma Removal">Lipoma Removal</option>
+              <option value="Ganglion Cyst Removal">Ganglion Cyst Removal</option>
               <option value="Genital Warts Removal">Genital Warts Removal</option>
             </select>
           </div>
