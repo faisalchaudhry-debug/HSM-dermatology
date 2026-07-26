@@ -76,7 +76,7 @@ export const getSkinTagFaqs = (city: string): FAQItem[] => [
   },
   {
     question: `How much does skin tag removal cost in ${city}?`,
-    answer: `Our skin tag removal in ${city} starts from £150. We offer clear, transparent pricing and a free initial consultation to assess your needs.`
+    answer: `Our skin tag removal in ${city} starts from £199. We offer clear, transparent pricing and a free initial consultation to assess your needs.`
   },
   {
     question: "Is laser skin tag removal better than freezing?",
